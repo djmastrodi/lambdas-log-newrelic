@@ -1,0 +1,20 @@
+{
+  "name": "lambdas-log-newrelic",
+  "version": "1.0.0",
+  "main": "app.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "zlib": "^1.0.5"
+  },
+  "scripts": {
+    "build": "tsc",
+    "script-build-sh": "./build.sh",
+    "deploy": "tsc && rushx script-build-sh"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.34",
+    "typescript": "^4.6.4"
+  }
+  
+}

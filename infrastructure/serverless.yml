@@ -1,0 +1,54 @@
+service: serverless-logapp-app
+
+frameworkVersion: '3'
+
+custom:
+  variables:
+    region: ${env:AWS_REGION, 'us-east-1'}
+    memorySize: ${env:MEMORY_SIZE, '128'}
+    timeout: ${env:TIMEOUT, '30'}
+    environment: ${opt:stage, 'dev'}
+    artifact: ${env:ARTIFACT,'../dist/dist.zip'}
+
+provider:
+  name: aws
+  stage: ${self:custom.variables.environment}
+  runtime: nodejs14.x
+  region: ${self:custom.variables.region}
+  timeout: ${self:custom.variables.timeout}
+  memorySize: ${self:custom.variables.memorySize}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource:
+        - '*'
+    - Effect: Allow
+      Action:
+        - secretsmanager:*
+      Resource:
+        - '*'
+    - Effect: Allow
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource:
+        - 'Fn::Join':
+            - ':'
+            - - 'arn:aws:logs'
+              - Ref: 'AWS::Region'
+              - Ref: 'AWS::AccountId'
+              - 'log-group:/aws/lambda/*:*:*'
+
+package:
+  artifact: ${self:custom.variables.artifact}
+
+functions:
+  category:
+    name: ${self:custom.variables.environment}-logapp
+    environment: ${file(./environment_variables.json):${self:custom.variables.environment}}
+    handler: app.handler
+    events:
+     - cloudwatchLog: '/aws/lambda/**'
+

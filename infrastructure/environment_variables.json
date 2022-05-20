@@ -1,0 +1,11 @@
+{
+  "production": {
+    "BASE_LICENSE_KEY_NEWRELIC":""
+  },
+  "staging": {
+    "BASE_LICENSE_KEY_NEWRELIC":""
+  },
+  "develop": {
+    "BASE_LICENSE_KEY_NEWRELIC":""
+  }
+}
